@@ -10,7 +10,7 @@ alwaysApply: false
 # Frontend Best Practices
 
 - This rule governs frontend architecture, behavior, accessibility, and performance. For shadcn/Tailwind styling and extraction thresholds, follow `.cursor/rules/shadcn-ui.mdc`.
-- In App Router, prefer Client Components for interactive UI and use Server Components only when server rendering/data boundaries make it necessary.
+- In Next.js App Router, default to Client Components for most UI and stateful flows so behavior is predictable without SSR coupling; use Server Components only when server rendering/data boundaries make it clearly beneficial.
 - Keep feature components small and explicit: separate presentational markup from data fetching, local state orchestration, and side effects.
 - For client-first screens, fetch via client data layers (for example tRPC/react-query) and keep loading, empty, and error states explicit and reusable.
 - Keep URL-persistent UI state (tabs/filters/sort/expanded sections) in route/query state; keep only ephemeral interaction state in component state.
