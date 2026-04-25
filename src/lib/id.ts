@@ -10,6 +10,7 @@ const nanoid = customAlphabet(
 type TId =
 	| "usr" // User
 	| "act" // Activity
+	| "rnote" // Recommendation note
 	| "rec" // Receipt
 	| "rcpt" // Split receipt snapshot
 	| "ext" // Extraction
@@ -27,3 +28,4 @@ export const prefixedIdSchema = (prefix: TId) =>
 
 export const activityIdSchema = prefixedIdSchema("act");
 export const userIdSchema = prefixedIdSchema("usr");
+export const recommendationNoteIdSchema = prefixedIdSchema("rnote");

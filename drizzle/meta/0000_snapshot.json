@@ -1,0 +1,693 @@
+{
+	"id": "61d376f4-6360-47b0-be14-f20f39ffc515",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"public.memento_activity": {
+			"name": "memento_activity",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true,
+					"identity": {
+						"type": "byDefault",
+						"name": "memento_activity_id_seq",
+						"schema": "public",
+						"increment": "1",
+						"startWith": "1",
+						"minValue": "1",
+						"maxValue": "2147483647",
+						"cache": "1",
+						"cycle": false
+					}
+				},
+				"publicId": {
+					"name": "publicId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"sourceType": {
+					"name": "sourceType",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"createdByUserId": {
+					"name": "createdByUserId",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"title": {
+					"name": "title",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"latitude": {
+					"name": "latitude",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"longitude": {
+					"name": "longitude",
+					"type": "double precision",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"radiusMeters": {
+					"name": "radiusMeters",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"days": {
+					"name": "days",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"specificDates": {
+					"name": "specificDates",
+					"type": "date[]",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"timeOfDay": {
+					"name": "timeOfDay",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"startTime": {
+					"name": "startTime",
+					"type": "time",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"endTime": {
+					"name": "endTime",
+					"type": "time",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"category": {
+					"name": "category",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"minDurationMinutes": {
+					"name": "minDurationMinutes",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"maxDurationMinutes": {
+					"name": "maxDurationMinutes",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"isIndoor": {
+					"name": "isIndoor",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"costLevel": {
+					"name": "costLevel",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"tags": {
+					"name": "tags",
+					"type": "text[]",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'{}'::text[]"
+				},
+				"isActive": {
+					"name": "isActive",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": true
+				},
+				"priority": {
+					"name": "priority",
+					"type": "smallint",
+					"primaryKey": false,
+					"notNull": true,
+					"default": 0
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updatedAt": {
+					"name": "updatedAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"activity_public_id_idx": {
+					"name": "activity_public_id_idx",
+					"columns": [
+						{
+							"expression": "publicId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"activity_source_type_idx": {
+					"name": "activity_source_type_idx",
+					"columns": [
+						{
+							"expression": "sourceType",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"activity_created_by_user_id_idx": {
+					"name": "activity_created_by_user_id_idx",
+					"columns": [
+						{
+							"expression": "createdByUserId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"activity_category_idx": {
+					"name": "activity_category_idx",
+					"columns": [
+						{
+							"expression": "category",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"activity_location_idx": {
+					"name": "activity_location_idx",
+					"columns": [
+						{
+							"expression": "latitude",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						},
+						{
+							"expression": "longitude",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"memento_activity_createdByUserId_memento_user_id_fk": {
+					"name": "memento_activity_createdByUserId_memento_user_id_fk",
+					"tableFrom": "memento_activity",
+					"tableTo": "memento_user",
+					"columnsFrom": ["createdByUserId"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {
+				"activity_source_type_enum": {
+					"name": "activity_source_type_enum",
+					"value": "\"memento_activity\".\"sourceType\" in ('curated','user')"
+				},
+				"activity_days_enum": {
+					"name": "activity_days_enum",
+					"value": "\"memento_activity\".\"days\" in ('weekday','weekend','any')"
+				},
+				"activity_category_enum": {
+					"name": "activity_category_enum",
+					"value": "\"memento_activity\".\"category\" in ('food','nature','entertainment','social')"
+				},
+				"activity_time_of_day_enum": {
+					"name": "activity_time_of_day_enum",
+					"value": "\"memento_activity\".\"timeOfDay\" is null or \"memento_activity\".\"timeOfDay\" in ('early-morning','morning','late-morning','afternoon','evening','night','late-night')"
+				},
+				"activity_cost_level_range": {
+					"name": "activity_cost_level_range",
+					"value": "\"memento_activity\".\"costLevel\" is null or (\"memento_activity\".\"costLevel\" >= 0 and \"memento_activity\".\"costLevel\" <= 3)"
+				},
+				"activity_time_range_order": {
+					"name": "activity_time_range_order",
+					"value": "\"memento_activity\".\"startTime\" is null or \"memento_activity\".\"endTime\" is null or \"memento_activity\".\"startTime\" <= \"memento_activity\".\"endTime\""
+				},
+				"activity_source_type_owner_guard": {
+					"name": "activity_source_type_owner_guard",
+					"value": "(\"memento_activity\".\"sourceType\" = 'curated' and \"memento_activity\".\"createdByUserId\" is null) or (\"memento_activity\".\"sourceType\" = 'user' and \"memento_activity\".\"createdByUserId\" is not null)"
+				}
+			},
+			"isRLSEnabled": false
+		},
+		"public.memento_post": {
+			"name": "memento_post",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true,
+					"identity": {
+						"type": "byDefault",
+						"name": "memento_post_id_seq",
+						"schema": "public",
+						"increment": "1",
+						"startWith": "1",
+						"minValue": "1",
+						"maxValue": "2147483647",
+						"cache": "1",
+						"cycle": false
+					}
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(256)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updatedAt": {
+					"name": "updatedAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"name_idx": {
+					"name": "name_idx",
+					"columns": [
+						{
+							"expression": "name",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"public.memento_recommendation_note": {
+			"name": "memento_recommendation_note",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true,
+					"identity": {
+						"type": "byDefault",
+						"name": "memento_recommendation_note_id_seq",
+						"schema": "public",
+						"increment": "1",
+						"startWith": "1",
+						"minValue": "1",
+						"maxValue": "2147483647",
+						"cache": "1",
+						"cycle": false
+					}
+				},
+				"publicId": {
+					"name": "publicId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"userId": {
+					"name": "userId",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"activityId": {
+					"name": "activityId",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"slotStartAt": {
+					"name": "slotStartAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"slotEndAt": {
+					"name": "slotEndAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"note": {
+					"name": "note",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {
+				"recommendation_note_public_id_idx": {
+					"name": "recommendation_note_public_id_idx",
+					"columns": [
+						{
+							"expression": "publicId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"recommendation_note_user_id_idx": {
+					"name": "recommendation_note_user_id_idx",
+					"columns": [
+						{
+							"expression": "userId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"recommendation_note_activity_id_idx": {
+					"name": "recommendation_note_activity_id_idx",
+					"columns": [
+						{
+							"expression": "activityId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"recommendation_note_slot_start_idx": {
+					"name": "recommendation_note_slot_start_idx",
+					"columns": [
+						{
+							"expression": "slotStartAt",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {
+				"memento_recommendation_note_userId_memento_user_id_fk": {
+					"name": "memento_recommendation_note_userId_memento_user_id_fk",
+					"tableFrom": "memento_recommendation_note",
+					"tableTo": "memento_user",
+					"columnsFrom": ["userId"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				},
+				"memento_recommendation_note_activityId_memento_activity_id_fk": {
+					"name": "memento_recommendation_note_activityId_memento_activity_id_fk",
+					"tableFrom": "memento_recommendation_note",
+					"tableTo": "memento_activity",
+					"columnsFrom": ["activityId"],
+					"columnsTo": ["id"],
+					"onDelete": "cascade",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {
+				"recommendation_note_slot_order": {
+					"name": "recommendation_note_slot_order",
+					"value": "\"memento_recommendation_note\".\"slotStartAt\" <= \"memento_recommendation_note\".\"slotEndAt\""
+				}
+			},
+			"isRLSEnabled": false
+		},
+		"public.memento_user": {
+			"name": "memento_user",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "integer",
+					"primaryKey": true,
+					"notNull": true,
+					"identity": {
+						"type": "byDefault",
+						"name": "memento_user_id_seq",
+						"schema": "public",
+						"increment": "1",
+						"startWith": "1",
+						"minValue": "1",
+						"maxValue": "2147483647",
+						"cache": "1",
+						"cycle": false
+					}
+				},
+				"publicId": {
+					"name": "publicId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"clerkUserId": {
+					"name": "clerkUserId",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"timezone": {
+					"name": "timezone",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'America/New_York'"
+				},
+				"email": {
+					"name": "email",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"imageUrl": {
+					"name": "imageUrl",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"calendarConnected": {
+					"name": "calendarConnected",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"calendarConnectionStatus": {
+					"name": "calendarConnectionStatus",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"calendarScopes": {
+					"name": "calendarScopes",
+					"type": "text[]",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"calendarLastSyncAt": {
+					"name": "calendarLastSyncAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"calendarSyncError": {
+					"name": "calendarSyncError",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"createdAt": {
+					"name": "createdAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"updatedAt": {
+					"name": "updatedAt",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"user_public_id_idx": {
+					"name": "user_public_id_idx",
+					"columns": [
+						{
+							"expression": "publicId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"user_clerk_user_id_idx": {
+					"name": "user_clerk_user_id_idx",
+					"columns": [
+						{
+							"expression": "clerkUserId",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": true,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				},
+				"user_calendar_connected_idx": {
+					"name": "user_calendar_connected_idx",
+					"columns": [
+						{
+							"expression": "calendarConnected",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"concurrently": false,
+					"method": "btree",
+					"with": {}
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {
+				"user_calendar_connection_status_enum": {
+					"name": "user_calendar_connection_status_enum",
+					"value": "\"memento_user\".\"calendarConnectionStatus\" is null or \"memento_user\".\"calendarConnectionStatus\" in ('connected','expired','revoked','error')"
+				}
+			},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {},
+	"schemas": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"views": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

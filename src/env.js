@@ -9,6 +9,11 @@ export const env = createEnv({
 	server: {
 		DATABASE_URL: z.string().url(),
 		CLERK_SECRET_KEY: z.string().min(1),
+		GOOGLE_MAPS_API_KEY: z.string().min(1).optional(),
+		ANTHROPIC_API_KEY: z.string().min(1).optional(),
+		ANTHROPIC_MODEL: z.string().min(1).optional(),
+		SEED_LATITUDE: z.coerce.number().finite().optional(),
+		SEED_LONGITUDE: z.coerce.number().finite().optional(),
 		NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
@@ -30,6 +35,11 @@ export const env = createEnv({
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
 		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+		GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+		ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+		ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL,
+		SEED_LATITUDE: process.env.SEED_LATITUDE,
+		SEED_LONGITUDE: process.env.SEED_LONGITUDE,
 		NODE_ENV: process.env.NODE_ENV,
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,

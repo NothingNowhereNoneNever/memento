@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TodayRecommendations } from "@/components/app-ui/today-recommendations";
 import { fetchTodaysGoogleCalendarEvents } from "@/lib/google-calendar";
 import type { DayTimeline } from "@/lib/timeline";
 import { ensureCurrentUser } from "@/server/auth/ensure-user";
@@ -112,6 +113,8 @@ export default async function HomePage() {
 					))}
 				</section>
 			)}
+
+			<TodayRecommendations />
 		</main>
 	);
 }

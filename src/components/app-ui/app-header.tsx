@@ -23,6 +23,12 @@ export function AppHeader() {
 							</Link>
 							<Link
 								className="text-sm text-zinc-600 hover:text-zinc-900"
+								href="/relive"
+							>
+								Relive
+							</Link>
+							<Link
+								className="text-sm text-zinc-600 hover:text-zinc-900"
 								href="/settings"
 							>
 								Settings

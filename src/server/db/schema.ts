@@ -136,3 +136,39 @@ export const activities = createTable(
 		),
 	],
 );
+
+export const recommendationNotes = createTable(
+	"recommendation_note",
+	(d) => ({
+		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+		publicId: d.text().notNull(),
+
+		userId: d
+			.integer()
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		activityId: d
+			.integer()
+			.notNull()
+			.references(() => activities.id, { onDelete: "cascade" }),
+
+		slotStartAt: d.timestamp({ withTimezone: true }).notNull(),
+		slotEndAt: d.timestamp({ withTimezone: true }).notNull(),
+		note: d.text().notNull(),
+
+		createdAt: d
+			.timestamp({ withTimezone: true })
+			.$defaultFn(() => /* @__PURE__ */ new Date())
+			.notNull(),
+	}),
+	(t) => [
+		uniqueIndex("recommendation_note_public_id_idx").on(t.publicId),
+		index("recommendation_note_user_id_idx").on(t.userId),
+		index("recommendation_note_activity_id_idx").on(t.activityId),
+		index("recommendation_note_slot_start_idx").on(t.slotStartAt),
+		check(
+			"recommendation_note_slot_order",
+			sql`${t.slotStartAt} <= ${t.slotEndAt}`,
+		),
+	],
+);
