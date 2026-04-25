@@ -73,6 +73,57 @@ export async function fetchTodaysGoogleCalendarEvents(): Promise<GoogleCalendarR
 	const timeMin = startOfDay(now).toISOString();
 	const timeMax = endOfDay(now).toISOString();
 
+	console.log("Google Calendar debug: request window", { timeMin, timeMax });
+
+	const calendarListUrl = new URL(
+		"https://www.googleapis.com/calendar/v3/users/me/calendarList",
+	);
+	calendarListUrl.searchParams.set("showDeleted", "false");
+	calendarListUrl.searchParams.set("showHidden", "false");
+
+	const calendarsRes = await fetch(calendarListUrl.toString(), {
+		headers: {
+			Authorization: `Bearer ${tokenResult.token}`,
+		},
+	});
+
+	if (!calendarsRes.ok) {
+		const calendarErrorJson = (await calendarsRes.json().catch(() => null)) as {
+			error?: {
+				message?: string;
+				errors?: Array<{ reason?: string; message?: string }>;
+			};
+		} | null;
+		console.error("Google Calendar list API request failed", {
+			status: calendarsRes.status,
+			googleReason: calendarErrorJson?.error?.errors?.[0]?.reason,
+			googleMessage: calendarErrorJson?.error?.message,
+		});
+	} else {
+		const calendarsJson = (await calendarsRes.json()) as {
+			items?: Array<{
+				id?: string;
+				summary?: string;
+				primary?: boolean;
+				selected?: boolean;
+				accessRole?: string;
+				timeZone?: string;
+			}>;
+		};
+		const calendars = calendarsJson.items ?? [];
+		console.log(
+			"Google Calendar debug: calendars received",
+			calendars.map((c) => ({
+				id: c.id ?? null,
+				summary: c.summary ?? null,
+				primary: Boolean(c.primary),
+				selected: Boolean(c.selected),
+				accessRole: c.accessRole ?? null,
+				timeZone: c.timeZone ?? null,
+			})),
+		);
+	}
+
 	const url = new URL(
 		"https://www.googleapis.com/calendar/v3/calendars/primary/events",
 	);
@@ -80,6 +131,7 @@ export async function fetchTodaysGoogleCalendarEvents(): Promise<GoogleCalendarR
 	url.searchParams.set("timeMax", timeMax);
 	url.searchParams.set("singleEvents", "true");
 	url.searchParams.set("orderBy", "startTime");
+	console.log("Google Calendar debug: events query", url.toString());
 
 	const res = await fetch(url.toString(), {
 		headers: {
@@ -113,6 +165,7 @@ export async function fetchTodaysGoogleCalendarEvents(): Promise<GoogleCalendarR
 
 	const json: unknown = await res.json();
 	const items = (json as { items?: unknown[] } | null)?.items ?? [];
+	console.log("Google Calendar debug: raw primary events count", items.length);
 
 	const events: GoogleCalendarEvent[] = [];
 	for (const item of items) {
@@ -153,6 +206,8 @@ export async function fetchTodaysGoogleCalendarEvents(): Promise<GoogleCalendarR
 			htmlLink: typeof e.htmlLink === "string" ? e.htmlLink : null,
 		});
 	}
+
+	console.log("Google Calendar debug: normalized primary events", events);
 
 	return { ok: true, events };
 }
