@@ -47,10 +47,7 @@ export async function getGoogleAccessTokenForCurrentUser(): Promise<GoogleTokenR
 	if (!userId) return { ok: false, reason: "not_signed_in" };
 
 	const client = await clerkClient();
-	const tokens = await client.users.getUserOauthAccessToken(
-		userId,
-		"oauth_google",
-	);
+	const tokens = await client.users.getUserOauthAccessToken(userId, "google");
 
 	const token = tokens.data[0]?.token;
 	if (!token) return { ok: false, reason: "no_google_token" };
