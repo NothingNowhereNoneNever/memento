@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { fetchTodaysGoogleCalendarEvents } from "@/lib/google-calendar";
 import type { DayTimeline } from "@/lib/timeline";
+import { ensureCurrentUser } from "@/server/auth/ensure-user";
 
 function formatDayHeading(date: Date) {
 	return new Intl.DateTimeFormat(undefined, {
@@ -21,6 +22,10 @@ function formatTimeRange(startIso: string, endIso: string) {
 }
 
 export default async function HomePage() {
+	await ensureCurrentUser().catch((error: unknown) => {
+		console.error("Failed to upsert current user", error);
+	});
+
 	const day = new Date();
 	const result = await fetchTodaysGoogleCalendarEvents();
 
