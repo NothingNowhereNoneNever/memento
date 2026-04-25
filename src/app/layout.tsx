@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { AppHeader } from "@/components/app-ui/app-header";
 import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
@@ -23,7 +24,10 @@ export default function RootLayout({
 		<html className={`${geist.variable}`} lang="en">
 			<body suppressHydrationWarning>
 				<ClerkProvider>
-					<TRPCReactProvider>{children}</TRPCReactProvider>
+					<TRPCReactProvider>
+						<AppHeader />
+						{children}
+					</TRPCReactProvider>
 				</ClerkProvider>
 			</body>
 		</html>

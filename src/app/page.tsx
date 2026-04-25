@@ -41,24 +41,24 @@ export default async function HomePage() {
 	}
 
 	return (
-		<main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 px-4 py-10">
+		<main className="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full max-w-3xl flex-col gap-6 px-4 py-10">
 			<header className="flex flex-col gap-1">
 				<h1 className="text-balance font-semibold text-2xl tracking-tight">
 					Today
 				</h1>
-				<p className="text-muted-foreground text-sm">{formatDayHeading(day)}</p>
+				<p className="text-sm text-zinc-600">{formatDayHeading(day)}</p>
 			</header>
 
 			{!result.ok ? (
-				<section className="rounded-lg border border-border bg-card p-4">
+				<section className="rounded-lg border border-zinc-200 bg-white p-4">
 					<p className="font-medium">Calendar not connected</p>
-					<p className="mt-1 text-muted-foreground text-sm">
+					<p className="mt-1 text-sm text-zinc-600">
 						Connect Google Calendar in Clerk to see your events here.
 					</p>
 					{result.reason === "no_google_token" ? (
 						<div className="mt-4">
 							<Link
-								className="inline-flex items-center justify-center rounded-md bg-primary px-3 py-2 font-medium text-primary-foreground text-sm hover:opacity-90"
+								className="inline-flex items-center justify-center rounded-md bg-zinc-900 px-3 py-2 font-medium text-sm text-white hover:bg-zinc-800"
 								href="/settings"
 							>
 								Connect Google Calendar
@@ -67,9 +67,9 @@ export default async function HomePage() {
 					) : null}
 				</section>
 			) : !timeline || timeline.events.length === 0 ? (
-				<section className="rounded-lg border border-border bg-card p-4">
+				<section className="rounded-lg border border-zinc-200 bg-white p-4">
 					<p className="font-medium">No events today</p>
-					<p className="mt-1 text-muted-foreground text-sm">
+					<p className="mt-1 text-sm text-zinc-600">
 						Your calendar looks free for now.
 					</p>
 				</section>
@@ -77,7 +77,7 @@ export default async function HomePage() {
 				<section className="flex flex-col gap-3">
 					{timeline.events.map((e) => (
 						<article
-							className="rounded-lg border border-border bg-card p-4"
+							className="rounded-lg border border-zinc-200 bg-white p-4"
 							key={e.id}
 						>
 							<div className="flex flex-col gap-1">
@@ -85,7 +85,7 @@ export default async function HomePage() {
 									<h2 className="font-medium">{e.title}</h2>
 									{e.link ? (
 										<a
-											className="shrink-0 text-primary text-sm underline-offset-4 hover:underline"
+											className="shrink-0 text-sm text-zinc-900 underline-offset-4 hover:underline"
 											href={e.link}
 											rel="noreferrer"
 											target="_blank"
@@ -94,7 +94,7 @@ export default async function HomePage() {
 										</a>
 									) : null}
 								</div>
-								<p className="text-muted-foreground text-sm">
+								<p className="text-sm text-zinc-600">
 									{e.isAllDay
 										? "All day"
 										: formatTimeRange(e.startIso, e.endIso)}
