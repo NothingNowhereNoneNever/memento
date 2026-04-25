@@ -53,18 +53,18 @@ export default async function HomePage() {
 				<section className="rounded-lg border border-zinc-200 bg-white p-4">
 					<p className="font-medium">Calendar not connected</p>
 					<p className="mt-1 text-sm text-zinc-600">
-						Connect Google Calendar in Clerk to see your events here.
+						{result.reason === "google_api_error"
+							? "Google Calendar needs re-authorization. Reconnect it in Clerk settings to continue."
+							: "Connect Google Calendar in Clerk to see your events here."}
 					</p>
-					{result.reason === "no_google_token" ? (
-						<div className="mt-4">
-							<Link
-								className="inline-flex items-center justify-center rounded-md bg-zinc-900 px-3 py-2 font-medium text-sm text-white hover:bg-zinc-800"
-								href="/settings"
-							>
-								Connect Google Calendar
-							</Link>
-						</div>
-					) : null}
+					<div className="mt-4">
+						<Link
+							className="inline-flex items-center justify-center rounded-md bg-zinc-900 px-3 py-2 font-medium text-sm text-white hover:bg-zinc-800"
+							href="/settings"
+						>
+							Connect Google Calendar
+						</Link>
+					</div>
 				</section>
 			) : !timeline || timeline.events.length === 0 ? (
 				<section className="rounded-lg border border-zinc-200 bg-white p-4">
