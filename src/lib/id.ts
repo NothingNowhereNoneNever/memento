@@ -1,4 +1,5 @@
 import { customAlphabet } from "nanoid";
+import { z } from "zod";
 
 const nanoid = customAlphabet(
 	"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
@@ -8,6 +9,7 @@ const nanoid = customAlphabet(
 // Short prefix denoting the ID type
 type TId =
 	| "usr" // User
+	| "act" // Activity
 	| "rec" // Receipt
 	| "rcpt" // Split receipt snapshot
 	| "ext" // Extraction
@@ -19,3 +21,9 @@ type TId =
 export const generateId = (idType: TId) => {
 	return `${idType}_${nanoid()}`;
 };
+
+export const prefixedIdSchema = (prefix: TId) =>
+	z.string().regex(new RegExp(`^${prefix}_[0-9A-Za-z]{12}$`));
+
+export const activityIdSchema = prefixedIdSchema("act");
+export const userIdSchema = prefixedIdSchema("usr");
