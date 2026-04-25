@@ -1,53 +1,99 @@
-import Link from "next/link";
+import { fetchTodaysGoogleCalendarEvents } from "@/lib/google-calendar";
+import type { DayTimeline } from "@/lib/timeline";
 
-import { LatestPost } from "@/app/_components/post";
-import { api, HydrateClient } from "@/trpc/server";
+function formatDayHeading(date: Date) {
+	return new Intl.DateTimeFormat(undefined, {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+	}).format(date);
+}
 
-export default async function Home() {
-	const hello = await api.post.hello({ text: "from tRPC" });
+function formatTimeRange(startIso: string, endIso: string) {
+	const start = new Date(startIso);
+	const end = new Date(endIso);
+	const fmt = new Intl.DateTimeFormat(undefined, {
+		hour: "numeric",
+		minute: "2-digit",
+	});
+	return `${fmt.format(start)}–${fmt.format(end)}`;
+}
 
-	void api.post.getLatest.prefetch();
+export default async function HomePage() {
+	const day = new Date();
+	const result = await fetchTodaysGoogleCalendarEvents();
+
+	let timeline: DayTimeline | null = null;
+	if (result.ok) {
+		timeline = {
+			dayIso: day.toISOString(),
+			events: result.events.map((e) => ({
+				id: e.id,
+				title: e.summary ?? "(No title)",
+				startIso: e.startIso,
+				endIso: e.endIso,
+				isAllDay: e.isAllDay,
+				location: e.location,
+				link: e.htmlLink,
+			})),
+		};
+	}
 
 	return (
-		<HydrateClient>
-			<main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-				<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-					<h1 className="font-extrabold text-5xl tracking-tight sm:text-[5rem]">
-						Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-					</h1>
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-						<Link
-							className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-							href="https://create.t3.gg/en/usage/first-steps"
-							target="_blank"
-						>
-							<h3 className="font-bold text-2xl">First Steps →</h3>
-							<div className="text-lg">
-								Just the basics - Everything you need to know to set up your
-								database and authentication.
-							</div>
-						</Link>
-						<Link
-							className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-							href="https://create.t3.gg/en/introduction"
-							target="_blank"
-						>
-							<h3 className="font-bold text-2xl">Documentation →</h3>
-							<div className="text-lg">
-								Learn more about Create T3 App, the libraries it uses, and how
-								to deploy it.
-							</div>
-						</Link>
-					</div>
-					<div className="flex flex-col items-center gap-2">
-						<p className="text-2xl text-white">
-							{hello ? hello.greeting : "Loading tRPC query..."}
-						</p>
-					</div>
+		<main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 px-4 py-10">
+			<header className="flex flex-col gap-1">
+				<h1 className="text-balance font-semibold text-2xl tracking-tight">
+					Today
+				</h1>
+				<p className="text-muted-foreground text-sm">{formatDayHeading(day)}</p>
+			</header>
 
-					<LatestPost />
-				</div>
-			</main>
-		</HydrateClient>
+			{!result.ok ? (
+				<section className="rounded-lg border border-border bg-card p-4">
+					<p className="font-medium">Calendar not connected</p>
+					<p className="mt-1 text-muted-foreground text-sm">
+						Connect Google Calendar in Clerk to see your events here.
+					</p>
+				</section>
+			) : !timeline || timeline.events.length === 0 ? (
+				<section className="rounded-lg border border-border bg-card p-4">
+					<p className="font-medium">No events today</p>
+					<p className="mt-1 text-muted-foreground text-sm">
+						Your calendar looks free for now.
+					</p>
+				</section>
+			) : (
+				<section className="flex flex-col gap-3">
+					{timeline.events.map((e) => (
+						<article
+							className="rounded-lg border border-border bg-card p-4"
+							key={e.id}
+						>
+							<div className="flex flex-col gap-1">
+								<div className="flex items-start justify-between gap-3">
+									<h2 className="font-medium">{e.title}</h2>
+									{e.link ? (
+										<a
+											className="shrink-0 text-primary text-sm underline-offset-4 hover:underline"
+											href={e.link}
+											rel="noreferrer"
+											target="_blank"
+										>
+											Open
+										</a>
+									) : null}
+								</div>
+								<p className="text-muted-foreground text-sm">
+									{e.isAllDay
+										? "All day"
+										: formatTimeRange(e.startIso, e.endIso)}
+									{e.location ? ` · ${e.location}` : ""}
+								</p>
+							</div>
+						</article>
+					))}
+				</section>
+			)}
+		</main>
 	);
 }
