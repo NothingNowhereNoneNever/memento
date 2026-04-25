@@ -1,0 +1,10 @@
+{
+	"[typescript][javascript][json][markdown][yaml][jsonc][css][typescriptreact]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "biomejs.biome",
+		"editor.codeActionsOnSave": {
+			"source.organizeImports.biome": "explicit",
+			"source.fixAll.biome": "explicit"
+		}
+	}
+}

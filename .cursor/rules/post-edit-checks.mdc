@@ -1,0 +1,34 @@
+---
+description: Run bun check + typecheck after source edits; reference for package.json scripts
+alwaysApply: true
+---
+
+# Post-edit sanity checks
+
+After changing **application or build-relevant source** (e.g. `src/**`, root config like `next.config.*`, `tsconfig.json`, `components.json`, `biome.json`, env schema), run both:
+
+```bash
+bun run check
+bun run typecheck
+```
+
+- **`check`** — Biome lint/format (`biome check .`).
+- **`typecheck`** — TypeScript (`tsc --noEmit`).
+
+Do **not** skip these for substantive edits; fix failures before finishing. Trivial-only changes (comments, markdown under `.cursor/` or docs-only) may skip if clearly non-executable.
+
+## `package.json` scripts
+
+| Script | Command | Purpose |
+|--------|---------|---------|
+| `dev` | `next dev --turbo` | Local dev server |
+| `build` | `next build` | Production build |
+| `start` | `next start` | Run production server (after `build`) |
+| `preview` | `next build && next start` | Build then smoke-run prod locally |
+| `check` | `biome check .` | Lint + format check (no writes) |
+| `check:write` | `biome check --write .` | Auto-fix safe Biome issues |
+| `check:unsafe` | `biome check --write --unsafe .` | Biome with unsafe fixes (use sparingly) |
+| `typecheck` | `tsc --noEmit` | Typecheck without emitting JS |
+| `db:generate` | `drizzle-kit generate` | Generate SQL migrations from schema |
+
+Prefer **`bun run <script>`** in this repo (Bun package runner).

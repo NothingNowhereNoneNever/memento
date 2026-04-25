@@ -1,0 +1,18 @@
+---
+description: Frontend maintainability and performance practices for Next.js app code
+globs:
+  - src/app/**/*.tsx
+  - src/app/**/*.css
+  - src/app/**/*.ts
+alwaysApply: false
+---
+
+# Frontend Best Practices
+
+- This rule governs frontend architecture, behavior, accessibility, and performance. For shadcn/Tailwind styling and extraction thresholds, follow `.cursor/rules/shadcn-ui.mdc`.
+- In App Router, prefer Client Components for interactive UI and use Server Components only when server rendering/data boundaries make it necessary.
+- Keep feature components small and explicit: separate presentational markup from data fetching, local state orchestration, and side effects.
+- For client-first screens, fetch via client data layers (for example tRPC/react-query) and keep loading, empty, and error states explicit and reusable.
+- Keep URL-persistent UI state (tabs/filters/sort/expanded sections) in route/query state; keep only ephemeral interaction state in component state.
+- Accessibility is required by default: semantic landmarks, labels, keyboard interaction, focus visibility, and proper dialog/sheet titles and descriptions.
+- Prefer framework defaults for performance (`next/image`, `next/font`, route-level loading/error boundaries) before custom optimizations.

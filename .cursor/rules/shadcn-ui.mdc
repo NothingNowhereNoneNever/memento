@@ -1,0 +1,114 @@
+---
+description: UI migration rule for shadcn/ui + Tailwind focused on velocity, maintainability, and theme portability
+globs:
+  - src/**/*.tsx
+  - src/**/*.css
+  - src/components/**/*.ts
+  - src/app/**/_components/**/*.ts
+  - src/lib/utils.ts
+alwaysApply: false
+---
+
+# Shadcn + Tailwind UI Rule
+
+## CLI (this repo)
+
+- Use **Bun** for the shadcn CLI: `bunx --bun shadcn@latest` (add, docs, info, search). Do not use `npx` here unless Bun is unavailable.
+
+## UI directories
+
+- `src/components/ui/*` — generated shadcn primitives only.
+- `src/components/app-ui/*` — optional small domain wrappers or compositions **after** the 3× repetition or readability threshold (see below). Do not create a large custom design system here early.
+
+## Goal
+
+Prioritize velocity while keeping the codebase maintainable. Use shadcn/ui directly by default, and abstract only when repetition or complexity justifies it.
+
+## Core UI Principles
+
+- Prefer direct shadcn/ui usage in feature code.
+- Avoid wrapper components unless a pattern is repeated or clearly domain-specific.
+- Keep abstractions small, obvious, and easy to remove later.
+- Do not over-engineer a design system early.
+
+## Styling Rules
+
+- Use semantic token classes whenever possible:
+  - `bg-background`
+  - `bg-card`
+  - `text-foreground`
+  - `text-muted-foreground`
+  - `border-border`
+  - `bg-primary`
+  - `text-primary-foreground`
+- Avoid hardcoded colors like `bg-white`, `text-gray-500`, `dark:bg-zinc-900` unless there is a clear reason.
+- Prefer `cn()` for conditional class composition.
+- Keep class names readable and grouped logically.
+- Keep static styles in utility classes; use inline styles only for truly dynamic runtime values.
+
+## Component Usage
+
+- Use shadcn primitives directly unless there is a clear repeated pattern.
+- Extract a component only after a pattern appears at least 3 times, or JSX becomes hard to read.
+- Keep custom components focused on one job.
+- Favor composition over modifying shadcn base components.
+- Avoid editing core shadcn components unless the change is truly global and necessary.
+
+## Variants and Consistency
+
+- Standardize on a small set of variants and sizes.
+- Use existing shadcn variants before inventing new ones.
+- Do not create one-off visual styles for the same UI element.
+- Prefer consistency over novelty.
+
+## Layout Rules
+
+- Keep page structure predictable:
+  - consistent max-width containers
+  - consistent padding
+  - consistent vertical spacing
+- Reuse layout patterns across pages.
+- Avoid ad hoc spacing values when a common spacing pattern exists.
+
+## Reuse Guidelines
+
+- Extract shared UI only when it meaningfully reduces duplication.
+- Good candidates for reuse:
+  - section headers
+  - empty states
+  - cards used across multiple pages
+  - reusable form groups
+- Bad candidates for premature abstraction:
+  - components used once
+  - tiny wrappers with no real behavior
+  - generic abstractions with vague names
+
+## Future-Proofing
+
+- Keep UI code theme-friendly by using semantic tokens.
+- Avoid coupling feature logic to visual styling.
+- Leave room for future theme changes without forcing a rewrite.
+- Do not lock the app into a specific visual palette too early.
+
+## Code Quality
+
+- Prefer simple, explicit code over clever abstractions.
+- Keep components small and readable.
+- Add comments only when intent is not obvious.
+- Match existing codebase patterns before introducing new ones.
+
+## Default Decision Rule
+
+When in doubt:
+1. Use shadcn directly.
+2. Use semantic tokens.
+3. Extract only when repetition or complexity appears.
+4. Keep the code easy to change later.
+
+## PR Checklist
+
+- Use shadcn primitives first; no bespoke replacements where equivalent primitives exist.
+- Keep color classes semantic (token-based), avoiding hardcoded palette utilities.
+- Avoid duplicate long class strings; extract only at 3× repetition or readability pain.
+- Keep wrappers small, domain-specific, and removable.
+- Preserve accessibility defaults for interactive UI (labels, keyboard, focus-visible, dialog titles).

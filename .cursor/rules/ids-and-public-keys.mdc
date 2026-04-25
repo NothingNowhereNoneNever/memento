@@ -1,0 +1,50 @@
+---
+description: How to generate IDs, model primary keys, and publicId columns
+globs:
+  - src/server/**/*.{ts,tsx}
+  - src/app/api/**/*.{ts,tsx}
+  - drizzle/**/*.sql
+alwaysApply: false
+---
+
+# IDs and database keys
+
+## Application-generated identifiers
+
+- Use **`generateId`** from `src/server/utils/id.ts` for every **application-generated** unique string (upload `customId`, `publicId`, etc.).
+- Prefixes are typed: `usr_`, `rec_`, `ext_` — extend the `TId` union in `id.ts` when adding a new kind.
+- For **Zod / API validation** of a public extraction id, use **`extractionIdSchema`** (or add a sibling schema next to `generateId` for other prefixes).
+
+## Drizzle schema (no `generateId` in the schema file)
+
+- **Do not** wire `generateId` into column defaults (`$defaultFn`, etc.) in `schema.ts`. The DB layer stays free of ID generation.
+- **Primary key**: use an auto-incrementing **`bigint` (or `integer`)** identity column — not a string.
+- **Public-facing id**: add a separate **`publicId`** column:
+  - type: `text`
+  - **`notNull()`**
+  - **`uniqueIndex("…_public_id_idx").on(t.publicId)`** (unique btree index).
+- Set **`publicId`** in application code at **insert** time with the right `generateId("…")` call.
+
+## Queries and APIs
+
+- **External** routes, tRPC inputs, and redirects should use the **`publicId`** string (e.g. `ext_…`), not the internal numeric `id`.
+- Load and update rows by **`publicId`** when the caller only has the public identifier.
+
+## Examples
+
+```typescript
+// Insert (e.g. after upload)
+await db.insert(extractions).values({
+  publicId: generateId("ext"),
+  // id omitted — DB assigns
+  // …
+});
+```
+
+```typescript
+// Drizzle table excerpt — identity PK + unique publicId index
+id: bigint("id", { mode: "number" }).primaryKey().generatedByDefaultAsIdentity(),
+publicId: d.text().notNull(),
+// …
+(t) => [uniqueIndex("equitab_extraction_public_id_idx").on(t.publicId)],
+```

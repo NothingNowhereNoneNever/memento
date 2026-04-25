@@ -1,0 +1,24 @@
+---
+description: Keep navigation and refresh-safe state in the URL (path + query params)
+globs:
+  - src/app/**/*.tsx
+  - src/app/**/*.ts
+alwaysApply: false
+---
+
+# URL-first application state
+
+- **Survives refresh, back/forward, and sharing**: Anything the user should keep after reload or when opening a copied link must live in the URL—not in hidden navigation `state`, transient memory, or client-only stores tied to a single session without sync.
+- **Path segments** for stable resource identity (for example `/extract/[id]`). Prefer a canonical route over IDs passed only through upload callbacks or memory.
+- **Query params** for supplementary state: filters, sort, selected tab, expanded sections, comparison mode, etc. Encode them in `searchParams` so the server and client can rebuild the same view; pair reads with `useSearchParams` / server `searchParams` on pages.
+- **Do not** rely on React Router–style `location.state`, one-off objects on `router.push`, or similar patterns that the URL cannot reproduce after a full page load.
+
+```tsx
+// ❌ BAD — tab only in useState; lost on refresh, not shareable
+const [tab, setTab] = useState("summary");
+
+// ✅ GOOD — rebuild from searchParams; Link/router use the same query string
+router.push("/extract/123?tab=line-items");
+```
+
+- **Ephemeral UI** (upload progress, hover, focus, inline validation) may stay in React state; it does not need to be in the URL.
