@@ -53,9 +53,11 @@ export default async function HomePage() {
 				<section className="rounded-lg border border-zinc-200 bg-white p-4">
 					<p className="font-medium">Calendar not connected</p>
 					<p className="mt-1 text-sm text-zinc-600">
-						{result.reason === "google_api_error"
-							? "Google Calendar needs re-authorization. Reconnect it in Clerk settings to continue."
-							: "Connect Google Calendar in Clerk to see your events here."}
+						{result.reason === "google_insufficient_scope"
+							? "Google Calendar needs additional permissions. Reconnect it in Clerk settings and approve Calendar access."
+							: result.reason === "google_api_error"
+								? "Google Calendar needs re-authorization. Reconnect it in Clerk settings to continue."
+								: "Connect Google Calendar in Clerk to see your events here."}
 					</p>
 					<div className="mt-4">
 						<Link

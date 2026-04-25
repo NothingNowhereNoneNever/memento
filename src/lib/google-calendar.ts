@@ -57,7 +57,13 @@ export async function getGoogleAccessTokenForCurrentUser(): Promise<GoogleTokenR
 
 type GoogleCalendarResult =
 	| { ok: true; events: GoogleCalendarEvent[] }
-	| { ok: false; reason: GoogleTokenFailureReason | "google_api_error" };
+	| {
+			ok: false;
+			reason:
+				| GoogleTokenFailureReason
+				| "google_insufficient_scope"
+				| "google_api_error";
+	  };
 
 export async function fetchTodaysGoogleCalendarEvents(): Promise<GoogleCalendarResult> {
 	const tokenResult = await getGoogleAccessTokenForCurrentUser();
@@ -82,6 +88,26 @@ export async function fetchTodaysGoogleCalendarEvents(): Promise<GoogleCalendarR
 	});
 
 	if (!res.ok) {
+		const errorJson = (await res.json().catch(() => null)) as {
+			error?: {
+				message?: string;
+				status?: string;
+				errors?: Array<{ reason?: string; message?: string }>;
+			};
+		} | null;
+
+		const googleReason = errorJson?.error?.errors?.[0]?.reason;
+		const googleMessage = errorJson?.error?.message;
+		console.error("Google Calendar API request failed", {
+			status: res.status,
+			googleReason,
+			googleMessage,
+		});
+
+		if (res.status === 403 && googleReason === "insufficientPermissions") {
+			return { ok: false, reason: "google_insufficient_scope" };
+		}
+
 		return { ok: false, reason: "google_api_error" };
 	}
 
